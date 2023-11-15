@@ -4,9 +4,6 @@
 
 cmake_minimum_required(VERSION 3.27...3.27)
 
-if (NOT DEFINED ENV{PICO_SDK_PATH} AND (NOT PICO_SDK_PATH))
-    set(PICO_SDK_PATH ${CMAKE_CURRENT_LIST_DIR}/../pico-sdk)
-endif ()
 
 if (NOT DEFINED ENV{PICO_BOARD} AND (NOT PICO_BOARD))
     set(PICO_BOARD pico_w)
