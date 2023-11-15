@@ -20,21 +20,23 @@ static bt_on_up_cb_t _cb = 0;
 static void *_data = 0;
 static const char *_name = 0;
 static const char *_pin = 0;
-static const uint32_t tag = 7103332;  //Last Connected Device - lcd
+static const uint32_t tag = 7103332; // Last Connected Device - lcd
 static btstack_packet_callback_registration_t _hci_registration;
 
-typedef struct {
-    const btstack_tlv_t * btstack_tlv_impl;
-    void * btstack_tlv_context;
+typedef struct
+{
+    const btstack_tlv_t *btstack_tlv_impl;
+    void *btstack_tlv_context;
 } btstack_link_key_db_tlv_h;
 
-typedef struct {
+typedef struct
+{
     bd_addr_t addr;
     bd_addr_type_t addr_type;
 } le_device_addr_t;
 
 static btstack_link_key_db_tlv_h singleton;
-static btstack_link_key_db_tlv_h * self = &singleton;
+static btstack_link_key_db_tlv_h *self = &singleton;
 
 static le_device_addr_t remote_device;
 
@@ -52,7 +54,6 @@ static void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packe
     // const btstack_tlv_t *tlv;
     // const void *tlv_context;
 
-
     if (packet_type != HCI_EVENT_PACKET)
         return;
 
@@ -68,9 +69,12 @@ static void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packe
             (*_cb)(_data);
         printf("Working");
         btstack_tlv_get_instance(&self->btstack_tlv_impl, &self->btstack_tlv_context);
-        self->btstack_tlv_impl->get_tag(self->btstack_tlv_context, tag, (uint8_t*) &address, sizeof(address));
-        self->btstack_tlv_impl->delete_tag(self->btstack_tlv_context, tag);
-        a2dp_sink_establish_stream(address,&cid);
+        int status = self->btstack_tlv_impl->get_tag(self->btstack_tlv_context, tag, (uint8_t *)&address, sizeof(address));
+        if (status != 0)
+        {
+            self->btstack_tlv_impl->delete_tag(self->btstack_tlv_context, tag);
+            a2dp_sink_establish_stream(address, &cid);
+        }
         break;
 
     case HCI_EVENT_PIN_CODE_REQUEST:
@@ -79,15 +83,15 @@ static void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packe
         break;
 
     case HCI_EVENT_CONNECTION_COMPLETE:
-            hci_event_connection_complete_get_bd_addr(packet, address);
-            // tlv.store_tag(packet, tag, address, sizeof(address));
-            btstack_tlv_get_instance(&self->btstack_tlv_impl, &self->btstack_tlv_context);
-            self->btstack_tlv_impl->store_tag(self->btstack_tlv_context, tag, (uint8_t*) &address, sizeof(address));
-            break;
+        hci_event_connection_complete_get_bd_addr(packet, address);
+        // tlv.store_tag(packet, tag, address, sizeof(address));
+        btstack_tlv_get_instance(&self->btstack_tlv_impl, &self->btstack_tlv_context);
+        self->btstack_tlv_impl->store_tag(self->btstack_tlv_context, tag, (uint8_t *)&address, sizeof(address));
+        break;
     case HCI_EVENT_DISCONNECTION_COMPLETE:
-            btstack_tlv_get_instance(&self->btstack_tlv_impl, &self->btstack_tlv_context);
-            self->btstack_tlv_impl->delete_tag(self->btstack_tlv_context, tag);
-
+        btstack_tlv_get_instance(&self->btstack_tlv_impl, &self->btstack_tlv_context);
+        printf("deleting");
+        self->btstack_tlv_impl->delete_tag(self->btstack_tlv_context, tag);
 
     default:
         break;
@@ -123,20 +127,23 @@ void bt_begin(const char *name, const char *pin, bt_on_up_cb_t cb, void *data)
 #endif
 }
 
-static void get_link_keys(void){
-    bd_addr_t  addr;
+static void get_link_keys(void)
+{
+    bd_addr_t addr;
     link_key_t link_key;
     link_key_type_t type;
     btstack_link_key_iterator_t it;
 
     int ok = gap_link_key_iterator_init(&it);
-    if (!ok) {
+    if (!ok)
+    {
         printf("Link key iterator not implemented\n");
         return;
     }
     printf("Stored link keys: \n");
-    while (gap_link_key_iterator_get_next(&it, addr, link_key, &type)){
-        printf("%s - type %u, key: ", bd_addr_to_str(addr), (int) type);
+    while (gap_link_key_iterator_get_next(&it, addr, link_key, &type))
+    {
+        printf("%s - type %u, key: ", bd_addr_to_str(addr), (int)type);
         printf_hexdump(link_key, 16);
     }
     printf(".\n");
@@ -146,8 +153,13 @@ static void get_link_keys(void){
 static void get_last_connected(void)
 {
     bd_addr_t addr;
-    self->btstack_tlv_impl->get_tag(self->btstack_tlv_context, tag, (uint8_t *) &addr, 6);
-    printf("Last Device is %s\n", bd_addr_to_str(addr));
+    int status = self->btstack_tlv_impl->get_tag(self->btstack_tlv_context, tag, (uint8_t *)&addr, 6);
+    if (status != 0)
+    {
+        printf("Last Device is %s\n", bd_addr_to_str(addr));
+    }
+    else
+        printf("No last device\n");
 }
 
 void bt_run()
