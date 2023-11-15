@@ -18,4 +18,18 @@
     },
     "cmake.buildBeforeRun": true,
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "cmake.configureOnOpen": false,
+    "files.associations": {
+        "*.c": "c",
+        "unique_id.h": "c",
+        "hci.h": "c",
+        "memory.h": "c",
+        "btstack_run_loop.h": "c",
+        "l2cap.h": "c",
+        "bluetooth.h": "c",
+        "btstack_config.h": "c",
+        "cyw43_arch.h": "c",
+        "btstack_link_key_db_tlv.h": "c"
+    },
+    "cortex-debug.variableUseNaturalFormat": true,
 }

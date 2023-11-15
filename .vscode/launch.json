@@ -8,16 +8,18 @@
             "request": "launch",
             // to install you may need to patch vsix manifest of mcu-debug/peripheral-viewer
             "type": "cortex-debug",
-            // in settings.json add "cortex-debug.openocdPath": "/home/joachim/pico/openocd/src/openocd"
-            "servertype": "openocd",
+            // in settings.json add "cortex-debug.openocdPath": "/home/rohan/pico/openocd/src/openocd"
+            "servertype": "external",
             // tumbleweed has multiarch gdb
-            "gdbPath" : "gdb",
+            "gdbPath" : "arm-none-eabi-gdb",
             "device": "RP2040",
             "configFiles": [
                 "interface/cmsis-dap.cfg",
                 "target/rp2040.cfg"
             ],
-            "svdFile": "/home/joachim/pico/pico-sdk/src/rp2040/hardware_regs/rp2040.svd",
+            "svdFile": "/home/rohan/pico/pico-sdk/src/rp2040/hardware_regs/rp2040.svd",
+            "showDevDebugOutput": "raw",
+            "gdbTarget": "localhost:50000",
             "runToMain": true,
             // Work around for stopping at main on restart
             "postRestartCommands": [
@@ -25,7 +27,7 @@
                 "continue"
             ],
             "openOCDLaunchCommands": ["adapter speed 5000"],
-            "searchDir": ["/home/joachim/pico/openocd/tcl"],
+            "searchDir": ["/home/rohan/pico/openocd/tcl"],
         },
         {
             "name": "Pico Debug Attach",
@@ -34,16 +36,18 @@
             "request": "attach",
             // to install you may need to patch vsix manifest of mcu-debug/peripheral-viewer
             "type": "cortex-debug",
-            // in settings.json add "cortex-debug.openocdPath": "/home/joachim/pico/openocd/src/openocd"
-            "servertype": "openocd",
+            // in settings.json add "cortex-debug.openocdPath": "/home/rohan/pico/openocd/src/openocd"
+            "servertype": "external",
             // tumbleweed has multiarch gdb
-            "gdbPath" : "gdb",
+            "gdbPath" : "arm-none-eabi-gdb",
             "device": "RP2040",
             "configFiles": [
                 "interface/cmsis-dap.cfg",
                 "target/rp2040.cfg"
             ],
-            "svdFile": "/home/joachim/pico/pico-sdk/src/rp2040/hardware_regs/rp2040.svd",
+            "svdFile": "/home/rohan/pico/pico-sdk/src/rp2040/hardware_regs/rp2040.svd",
+            "showDevDebugOutput": "raw",
+            "gdbTarget": "localhost:50000",
             "runToMain": true,
             // Work around for stopping at main on restart
             "postRestartCommands": [
@@ -51,7 +55,7 @@
                 "continue"
             ],
             "openOCDLaunchCommands": ["adapter speed 5000"],
-            "searchDir": ["/home/joachim/pico/openocd/tcl"],
+            "searchDir": ["/home/rohan/pico/openocd/tcl"],
         }
     ]
 }

@@ -6,6 +6,9 @@
 
 typedef void (*bt_on_up_cb_t)( void * );
 
+
+static void get_link_keys();
+
 void bt_begin( const char *name, const char *pin, bt_on_up_cb_t cb, void *data );
 void bt_run();
 

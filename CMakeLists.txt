@@ -34,17 +34,17 @@ target_sources(${PROJECT_NAME} PRIVATE
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-    PICO_AUDIO_I2S_DATA_PIN=12
-    PICO_AUDIO_I2S_CLOCK_PIN_BASE=10
+    PICO_AUDIO_I2S_DATA_PIN=28
+    PICO_AUDIO_I2S_CLOCK_PIN_BASE=26
     RUN_PIN=22
     BT_PIN="0000"
-    BT_NAME="PicoW-A2DB"
+    BT_NAME="PicoW-Isetta"
 )
 
 target_link_libraries(${PROJECT_NAME}
     pico_stdlib
     pico_stdio_usb  # use usb, not uart for stdio
-    # pico_stdio_uart  # use uart, not usb for stdio e.g. via picoprobe
+    #pico_stdio_uart  # use uart, not usb for stdio e.g. via picoprobe
     pico_audio_i2s
     pico_btstack_sbc_decoder
     pico_btstack_classic
