@@ -290,7 +290,7 @@ static void event_handler(uint8_t event, uint8_t *packet) {
             _stream_state = STREAM_STATE_CLOSED;
             media_processing_close();
             cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, false);
-            // watchdog_enable(100, true);  // reboot in 0.1s, since reconnect is buggy
+            // watchdog_enable(4000, true);  // reboot in 0.1s, since reconnect is buggy
             break;
         
         case A2DP_SUBEVENT_SIGNALING_CONNECTION_RELEASED:

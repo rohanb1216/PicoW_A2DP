@@ -12,6 +12,8 @@
 
 #include <memory.h>
 #include <btstack_tlv.h>
+#include "hardware/watchdog.h"
+
 
 static char device_addr_string[] = "00:00:00:00:00:00";
 static bool _is_up = false;
@@ -92,6 +94,7 @@ static void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packe
         btstack_tlv_get_instance(&self->btstack_tlv_impl, &self->btstack_tlv_context);
         printf("deleting");
         self->btstack_tlv_impl->delete_tag(self->btstack_tlv_context, tag);
+        watchdog_enable(200, true);
 
     default:
         break;
@@ -113,7 +116,7 @@ void bt_begin(const char *name, const char *pin, bt_on_up_cb_t cb, void *data)
 
     gap_set_local_name(_name);
     gap_discoverable_control(1);
-    gap_set_class_of_device(0x200414); // Service Class: Audio, Major Device Class: Audio, Minor: Loudspeaker
+    gap_set_class_of_device(0x240404); // Service Class: Audio, Major Device Class: Audio, Minor: Loudspeaker
     gap_set_default_link_policy_settings(LM_LINK_POLICY_ENABLE_ROLE_SWITCH | LM_LINK_POLICY_ENABLE_SNIFF_MODE);
     gap_set_allow_role_switch(true); // A2DP Source, e.g. smartphone, can become master after re-connect.
 
